@@ -18,18 +18,22 @@ def temp_queue(tmp_path, monkeypatch):
 def test_wards_ranked_highest_risk_first():
     scores = load_wards()["risk_score"].tolist()
     assert scores == sorted(scores, reverse=True)
-    assert rank_wards(1)["wards"][0]["ward"] == "Bunyala South"
+    assert rank_wards(1)["wards"][0]["ward"] == load_wards()["ward"].iloc[0]
+
+
+def people(ward: str) -> int:
+    return find_ward(ward)["people_exposed"]
 
 
 def test_good_alert_is_saved_as_pending():
-    text = "TAHADHARI Bunyala South: watu 11,300 hatarini. Hamia sehemu za juu sasa. Msaada: 1199"
+    text = f"TAHADHARI Bunyala South: watu {people('Bunyala South'):,} hatarini. Hamia sehemu za juu sasa. Msaada: 1199"
     out = draft_alert("Bunyala South", "sw", text)
     assert out["saved"] and out["status"] == "pending approval"
     assert alerts.list_alerts("pending")[0]["text"] == text
 
 
 def test_approve_moves_alert_out_of_pending():
-    out = draft_alert("Bunyala West", "en", "FLOOD ALERT Bunyala West: 7,500 people at risk. Help: 1199")
+    out = draft_alert("Bunyala West", "en", f"FLOOD ALERT Bunyala West: {people('Bunyala West')} people at risk. Help: 1199")
     alerts.set_status(out["id"], "approved")
     assert alerts.list_alerts("pending") == []
     assert alerts.list_alerts("approved")[0]["id"] == out["id"]

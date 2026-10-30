@@ -3,6 +3,8 @@
     .venv\\Scripts\\streamlit run app.py
 """
 
+from pathlib import Path
+
 import pandas as pd
 import streamlit as st
 
@@ -12,7 +14,10 @@ from floodsense.wards import SOURCE, find_ward, load_wards
 
 st.set_page_config(page_title="FloodSense Kenya", page_icon="🌊", layout="wide")
 st.title("FloodSense Kenya · Budalangi, Busia County")
-st.warning(f"**REPLAY DATA:** {SOURCE}.", icon="⚠️")
+st.warning(f"**PAST EVENT: April–May 2026 floods, measured by satellite. Not live data.** Source: {SOURCE}.", icon="⚠️")
+if Path("data/flood_map.png").exists():
+    with st.expander("Satellite flood map (Sentinel-1 radar): flooded land in blue, wards outlined in white"):
+        st.image("data/flood_map.png", use_container_width=True)
 
 wards = load_wards()
 left, right = st.columns([3, 2], gap="large")

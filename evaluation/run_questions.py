@@ -20,7 +20,7 @@ HERE = Path(__file__).parent
 
 
 def known_numbers() -> set[float]:
-    known = {1, 2, 3, 4, 160, 1199, 2026}  # ranks, SMS limit, helpline, year
+    known = {1, 2, 3, 4, 160, 1199, 2020, 2023, 2026}  # ranks, SMS limit, helpline, data years
     for value in load_wards().select_dtypes("number").to_numpy().ravel():
         known |= {float(value), float(round(value)), round(float(value), 1)}
     return known

@@ -1,7 +1,7 @@
 """Ward table and risk score for Budalangi, Busia County.
 
-The numbers in data/wards.csv are a REPLAY scenario of the March-May 2026
-long-rains floods, not live measurements.
+data/wards.csv comes from geo/flood_numbers.py (satellite data for the April-May
+2026 floods); data/source.txt says exactly which data and dates.
 
 risk = 0.5 * flooded share + 0.3 * people exposed + 0.2 * extra rain,
 each scaled 0-1, plus 0.1 if a school or clinic is in the flood zone.
@@ -12,7 +12,8 @@ from pathlib import Path
 import pandas as pd
 
 DATA = Path(__file__).resolve().parent.parent / "data" / "wards.csv"
-SOURCE = "Replay scenario, March-May 2026 floods (not live data)"
+SOURCE_FILE = DATA.with_name("source.txt")
+SOURCE = SOURCE_FILE.read_text(encoding="utf-8").strip() if SOURCE_FILE.exists() else "Replay scenario (not measured data)"
 
 
 def load_wards() -> pd.DataFrame:
