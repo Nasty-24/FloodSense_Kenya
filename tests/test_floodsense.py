@@ -1,4 +1,4 @@
-"""Checks that run without calling Gemma: the risk score, the number check and the approval queue."""
+"""Checks that run without calling Gemma: the impact score, the number check and the approval queue."""
 
 import pytest
 
@@ -15,8 +15,8 @@ def temp_queue(tmp_path, monkeypatch):
 
 # Normal cases
 
-def test_wards_ranked_highest_risk_first():
-    scores = load_wards()["risk_score"].tolist()
+def test_wards_ranked_highest_impact_first():
+    scores = load_wards()["impact_score"].tolist()
     assert scores == sorted(scores, reverse=True)
     assert rank_wards(1)["wards"][0]["ward"] == load_wards()["ward"].iloc[0]
 
@@ -59,6 +59,13 @@ def test_invented_number_is_rejected():
     out = draft_alert("Bunyala South", "en", "FLOOD ALERT Bunyala South: 50,000 people at risk.")
     assert out["rejected"] and "50000" in out["problems"][0]
     assert alerts.list_alerts("pending") == []
+
+
+def test_answer_check_flags_invented_numbers_only():
+    west = find_ward("Bunyala West")
+    good = f"Bunyala West: {west['people_exposed']} people, {west['flooded_km2']} km2 flooded. Source dates 2026-06-01."
+    assert alerts.unknown_numbers(good) == []
+    assert alerts.unknown_numbers("Bunyala West: 25,000 people affected.") == [25000]
 
 
 def test_unknown_place_returns_error_not_numbers():

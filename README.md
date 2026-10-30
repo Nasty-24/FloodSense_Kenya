@@ -6,6 +6,10 @@ Built at Hacktoberfest Hack Day Nairobi x iTech Club, 30–31 October 2026.
 
 **Prize categories entered:** Best Use of Gemma 4 · Best Open-Source AI Project
 
+![Sentinel-1 radar over Budalangi, April–May 2026: newly flooded land in blue, the four wards outlined in white](data/flood_map.png)
+
+*Sentinel-1 radar over Budalangi, April–May 2026: newly flooded land in blue, the four wards outlined in white.*
+
 ## The problem
 
 Budalangi in Busia County floods almost every long-rains season, when the Nzoia River overflows near Lake Victoria.
@@ -16,16 +20,19 @@ help first and write a warning people will understand, in their language, fast.
 **Use case:** the officer asks "Which wards need action first?", gets a ranked, explained answer with real numbers,
 and gets a Kiswahili SMS alert to review and approve.
 
+FloodSense is a **flood response** tool: it works from flooding the satellite has already observed and helps decide
+who to help first. It does not forecast where floods will happen (see [What's next](#whats-next)).
+
 ## What Gemma 4 does
 
 | Gemma 4 does | Plain code does (no AI needed) |
 |---|---|
 | Understands the officer's question in Kiswahili or English | Stores the ward figures |
-| Decides which tools to call and in what order | Computes the risk score with a fixed formula |
+| Decides which tools to call and in what order | Computes the flood impact score with a fixed formula |
 | Explains the ranking in plain words, citing the numbers | Checks every number in an alert against the data |
 | Writes the SMS alert in natural Kiswahili or English | Keeps alerts pending until a human approves |
 
-The risk score is deliberately **not** AI: it is a transparent formula officers can check.
+The impact score is deliberately **not** AI: it is a transparent formula officers can check.
 AI is used where rules fall short: understanding free-form questions in two languages and writing clear, short warnings.
 
 ## Model
@@ -43,7 +50,7 @@ Officer's question
    │
    ▼
 Gemma 4 (Gemini API) ──calls──► rank_wards()     ─┐
-                     ──calls──► ward_details()     ├─ read data/wards.csv + risk formula
+                     ──calls──► ward_details()     ├─ read data/wards.csv + impact formula
                      ──calls──► draft_alert() ─────┘
                                     │
                                     ▼
@@ -54,13 +61,15 @@ Gemma 4 (Gemini API) ──calls──► rank_wards()     ─┐
                     pending queue ──► officer edits ──► Approve / Reject
 ```
 
-**Risk score** = 0.5 × share of the ward flooded + 0.3 × people exposed + 0.2 × rain above normal
+**Flood impact score** = 0.5 × share of the ward flooded + 0.3 × people exposed + 0.2 × rain above normal
 (each scaled 0–1), + 0.1 if a school or clinic is in the flood zone.
 
 ## Safety and human control
 
-- **Gemma never sees raw data it could misquote silently:** every alert passes a check that rejects any number not
-  in the ward table (plus the Red Cross helpline 1199), and anything over 160 characters.
+- **Every alert is number-checked:** any number not in the ward table (except the Red Cross helpline 1199) is
+  rejected, and so is anything over 160 characters.
+- **Every chat answer is number-checked too:** the page marks each Gemma answer with a green tick when all its
+  numbers match the data, or a warning listing any number it can't trace.
 - **Nothing is sent automatically.** Every alert is a draft until an officer presses Approve. The officer can edit it
   first; the same check runs on the edit.
 - **No personal data goes to the model.** Only ward-level figures. No phone numbers or names.
@@ -91,11 +100,11 @@ pytest
 
 | Type | Test | Result |
 |---|---|---|
-| Normal | Wards ranked highest risk first; a valid alert is saved as pending; Approve moves it | Pass |
+| Normal | Wards ranked highest impact first; a valid alert is saved as pending; Approve moves it | Pass |
 | Edge | Short ward name ("south"); units like km2 not read as numbers; 161-character alert rejected | Pass |
 | Failure | Invented number (50,000) rejected; unknown place returns an error, not numbers | Pass |
 
-8 of 8 tests pass (`pytest`, 30 October 2026).
+9 of 9 tests pass (`pytest`, 31 October 2026).
 
 **Gemma evaluation** (`python evaluation/run_questions.py`): 20 questions, 10 Kiswahili and 10 English, including
 traps (an unknown place, "send alerts now", a question about deaths tomorrow).
@@ -118,7 +127,7 @@ How Gemma handled the trap questions (full answers in [`evaluation/results.csv`]
 `data/wards.csv` is computed by [`geo/flood_numbers.py`](geo/flood_numbers.py) in Google Earth Engine for
 Budalangi's four wards, for the **April–May 2026 floods** (a past event, not live data):
 
-| Ward | Newly flooded | People on flooded land | Flooded schools | Risk |
+| Ward | Newly flooded | People on flooded land | Flooded schools | Impact |
 |---|---|---|---|---|
 | Bunyala West | 1.0 km² | 710 | 1 | 0.62 |
 | Bunyala South | 2.8 km² | 470 | 0 | 0.42 |
@@ -156,13 +165,23 @@ Re-run with your own Earth Engine access: `earthengine authenticate`, then `pyth
   flooded areas are likely **underestimated**. Some blue along the shore may be a higher Lake Victoria level rather
   than river flooding. The figures have not been checked against field reports.
 - WorldPop 2020 is a modelled population estimate; OpenStreetMap may be missing schools and clinics in rural wards.
-- The risk formula's weights are a reasonable first guess, not calibrated against past floods.
+- The impact formula's weights are a reasonable first guess, not calibrated against past floods.
 - Kiswahili answers were checked for correct numbers on 10 questions, but their wording has not been rated by an independent fluent speaker.
 - Approve records the decision but does not send a real SMS yet (Africa's Talking is the next step).
 
+## What's next
+
+1. **Forecasting, not just response:** a model trained on real past floods (DesInventar flood records, upstream
+   rainfall, river levels) to warn wards *before* the water arrives, alongside
+   [Google Flood Hub](https://sites.research.google/floods/) river forecasts.
+2. **Real SMS and USSD:** send approved alerts through Africa's Talking, and let residents dial a USSD code to read
+   the latest alert for their ward.
+3. **Kiswahili review:** have fluent speakers and county officers rate and improve the alert wording.
+4. **More wards and counties:** the Earth Engine script works for any ward boundaries in Kenya.
+
 ## Team
 
-Solo project by **Brian** ([@Nasty-24](https://github.com/Nasty-24)): problem and user definition, risk formula,
+Solo project by **Brian** ([@Nasty-24](https://github.com/Nasty-24)): problem and user definition, impact formula,
 Gemma 4 agent and tools, number check, officer page, tests and evaluation.
 
 ## AI tools used

@@ -24,6 +24,8 @@ Rules:
 4. Reply in the language the officer used (Kiswahili or English). Be short and clear.
 
 For "which wards need action": call rank_wards, then explain the top 3 using their numbers.
+The impact_score says how hard a ward was hit by the flood the satellite observed. It is not a
+forecast: never say a ward "will" flood or is "likely" to flood.
 To draft an alert, call draft_alert. An alert is one SMS under 160 characters: the ward name,
 the danger in numbers from the tools, one clear action (move to high ground, collect children
 early, do not cross flood water), and the Red Cross line 1199. Write natural Kenyan Kiswahili.
@@ -34,13 +36,13 @@ Officer's message:
 
 
 def rank_wards(top_n: int = 3) -> dict:
-    """Rank Budalangi's wards by flood risk, highest first.
+    """Rank Budalangi's wards by flood impact (how hard the observed flood hit them), highest first.
 
     Args:
         top_n: How many wards to return.
     """
     df = load_wards().head(max(1, int(top_n)))
-    cols = ["ward", "risk_score", "flooded_km2", "flooded_pct", "people_exposed",
+    cols = ["ward", "impact_score", "flooded_km2", "flooded_pct", "people_exposed",
             "schools_flooded", "clinics_flooded", "rain_vs_normal"]
     return {"wards": df[cols].to_dict(orient="records"), "source": SOURCE}
 

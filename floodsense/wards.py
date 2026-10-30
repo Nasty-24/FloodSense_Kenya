@@ -1,9 +1,12 @@
-"""Ward table and risk score for Budalangi, Busia County.
+"""Ward table and flood impact score for Budalangi, Busia County.
+
+The impact score measures how hard each ward was hit by a flood that the satellite
+observed. It is a priority for response, not a forecast of future flooding.
 
 data/wards.csv comes from geo/flood_numbers.py (satellite data for the April-May
 2026 floods); data/source.txt says exactly which data and dates.
 
-risk = 0.5 * flooded share + 0.3 * people exposed + 0.2 * extra rain,
+impact = 0.5 * flooded share + 0.3 * people exposed + 0.2 * extra rain,
 each scaled 0-1, plus 0.1 if a school or clinic is in the flood zone.
 """
 
@@ -25,8 +28,8 @@ def load_wards() -> pd.DataFrame:
     bonus = ((df["schools_flooded"] + df["clinics_flooded"]) > 0) * 0.1
 
     df["flooded_pct"] = (flooded_share * 100).round().astype(int)
-    df["risk_score"] = (0.5 * flooded_share + 0.3 * people + 0.2 * extra_rain + bonus).clip(0, 1).round(2)
-    return df.sort_values("risk_score", ascending=False).reset_index(drop=True)
+    df["impact_score"] = (0.5 * flooded_share + 0.3 * people + 0.2 * extra_rain + bonus).clip(0, 1).round(2)
+    return df.sort_values("impact_score", ascending=False).reset_index(drop=True)
 
 
 def find_ward(name: str) -> dict | None:

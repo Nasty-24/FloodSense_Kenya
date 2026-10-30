@@ -9,30 +9,31 @@ import pandas as pd
 import streamlit as st
 
 from floodsense.agent import MODEL, ask_gemma
-from floodsense.alerts import check_alert, list_alerts, set_status
+from floodsense.alerts import check_alert, list_alerts, set_status, unknown_numbers
 from floodsense.wards import SOURCE, find_ward, load_wards
 
 st.set_page_config(page_title="FloodSense Kenya", page_icon="🌊", layout="wide")
 st.title("FloodSense Kenya · Budalangi, Busia County")
 st.warning(f"**PAST EVENT: April–May 2026 floods, measured by satellite. Not live data.** Source: {SOURCE}.", icon="⚠️")
 if Path("data/flood_map.png").exists():
-    with st.expander("Satellite flood map (Sentinel-1 radar): flooded land in blue, wards outlined in white"):
+    with st.expander("Satellite flood map (Sentinel-1 radar): flooded land in blue, wards outlined in white", expanded=True):
         st.image("data/flood_map.png", use_container_width=True)
 
 wards = load_wards()
 left, right = st.columns([3, 2], gap="large")
 
 with left:
-    st.subheader("Wards ranked by flood risk")
-    # Dot size = people on flooded land; colour = risk (red high, amber medium, yellow low)
+    st.subheader("Wards ranked by flood impact")
+    st.caption("How hard each ward was hit by the observed flood: a response priority, not a forecast.")
+    # Dot size = people on flooded land; colour = impact (red high, amber medium, yellow low)
     dots = wards.assign(
         size=600 + 1400 * wards["people_exposed"] / max(wards["people_exposed"].max(), 1),
-        colour=wards["risk_score"].map(lambda r: "#d62828cc" if r >= 0.5 else "#f77f00cc" if r >= 0.3 else "#fcbf49cc"),
+        colour=wards["impact_score"].map(lambda r: "#d62828cc" if r >= 0.5 else "#f77f00cc" if r >= 0.3 else "#fcbf49cc"),
     )
     st.map(dots, latitude="lat", longitude="lon", size="size", color="colour", zoom=10)
-    table = wards[["ward", "risk_score", "flooded_pct", "people_exposed", "schools_flooded", "clinics_flooded"]]
+    table = wards[["ward", "impact_score", "flooded_pct", "people_exposed", "schools_flooded", "clinics_flooded"]]
     st.dataframe(table, hide_index=True, use_container_width=True, column_config={
-        "risk_score": st.column_config.ProgressColumn("risk", min_value=0, max_value=1, format="%.2f"),
+        "impact_score": st.column_config.ProgressColumn("impact", min_value=0, max_value=1, format="%.2f"),
         "flooded_pct": st.column_config.NumberColumn("flooded %"),
         "people_exposed": st.column_config.NumberColumn("people exposed", format="%d"),
     })
@@ -51,6 +52,12 @@ with right:
                 st.error(f"Gemma is unavailable right now, so no answer was produced. ({exc})")
     if reply := st.session_state.get("reply"):
         st.markdown(reply["answer"])
+        unknown = unknown_numbers(reply["answer"])
+        if unknown:
+            st.warning("Check before using: this answer contains numbers not found in the ward data: "
+                       + ", ".join(f"{n:g}" for n in unknown), icon="⚠️")
+        else:
+            st.success("Number check: every number in this answer matches the ward data.", icon="✅")
         with st.expander(f"Tools Gemma called ({len(reply['tool_calls'])}) · model: {reply['model']}"):
             st.json(reply["tool_calls"])
 

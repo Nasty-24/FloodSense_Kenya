@@ -36,6 +36,20 @@ def check_alert(text: str, ward: dict) -> list[str]:
     return problems
 
 
+def unknown_numbers(text: str) -> list[float]:
+    """Numbers in a Gemma answer that can't be traced to the ward table or its cited source."""
+    from floodsense.wards import SOURCE, load_wards
+
+    known = {1, 2, 3, 4, 160, float(HELPLINE), 2020, 2023, 2026}  # list ranks, SMS limit, helpline, data years
+    df = load_wards()
+    for value in df.select_dtypes("number").to_numpy().ravel():
+        known |= {float(value), float(round(value)), round(float(value), 1)}
+    for ratio in df["rain_vs_normal"]:
+        known.add(float(round((ratio - 1) * 100)))  # "11% above normal" for 1.11
+    known |= set(numbers_in(SOURCE))  # dates quoted when citing the source
+    return sorted({n for n in numbers_in(text) if n not in known})
+
+
 def _load() -> list[dict]:
     return json.loads(QUEUE.read_text(encoding="utf-8")) if QUEUE.exists() else []
 
