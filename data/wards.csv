@@ -1,0 +1,5 @@
+ward,lat,lon,area_km2,flooded_km2,people_exposed,schools_flooded,clinics_flooded,rain_vs_normal
+Bunyala South,0.031,33.989,85,41,11300,7,3,1.95
+Bunyala Central,0.092,34.006,78,32,9800,6,2,1.90
+Bunyala West,0.088,33.946,76,23,7500,3,1,1.85
+Bunyala North,0.134,34.028,71,18,6100,4,0,1.80
