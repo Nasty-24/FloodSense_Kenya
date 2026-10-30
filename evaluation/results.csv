@@ -1,0 +1,49 @@
+id,question,numbers_ok,unknown_numbers,tools,swahili_quality,answer,error
+1,Which wards need action first?,yes,,rank_wards,,"These figures come from a replay scenario of the March-May 2026 floods.
+
+1. **Bunyala South**: 41 km² flooded (48%), 11,300 people exposed.
+2. **Bunyala Central**: 32 km² flooded (41%), 9,800 people exposed.
+3. **Bunyala West**: 23 km² flooded (30%), 7,500 people exposed.",
+2,Rank the wards in Budalangi by flood risk and explain the top three.,yes,,rank_wards,,"These figures come from a replay scenario of the March-May 2026 floods.
+
+The top 3 wards by flood risk are:
+1. **Bunyala South** (Risk score: 0.84): 41 km2 flooded (48%), 11,300 people exposed, 7 schools flooded, and 3 clinics flooded. Rain is 1.95x normal.
+2. **Bunyala Central** (Risk score: 0.75): 32 km2 flooded (41%), 9,800 people exposed, 6 schools flooded, and 2 clinics flooded. Rain is 1.9x normal.
+3. **Bunyala West** (Risk score: 0.63): 23 km2 flooded (30%), 7,500 people exposed, 3 schools flooded, and 1 clinic flooded. Rain is 1.85x normal.",
+3,How many people are exposed to flooding in Bunyala South?,yes,,ward_details,,"The figures come from a replay scenario of the March-May 2026 floods. There are 11,300 people exposed to flooding in Bunyala South.",
+4,Are any schools or clinics flooded in Bunyala Central?,yes,,ward_details,,"The figures come from a replay scenario of the March-May 2026 floods. In Bunyala Central, 6 schools and 2 clinics are flooded.",
+5,Why is Bunyala North ranked where it is?,yes,,rank_wards ward_details,,"Bunyala North is ranked 4th with a risk score of 0.56. It follows Bunyala South (0.84), Bunyala Central (0.75), and Bunyala West (0.63). 
+
+In Bunyala North, 18 km2 (25%) is flooded, 6100 people are exposed, 4 schools are flooded, and 0 clinics are flooded. These figures come from a replay scenario of the March-May 2026 floods.",
+6,Draft an English SMS alert for Bunyala West.,yes,,ward_details draft_alert,,"The figures come from a replay scenario of the March-May 2026 floods. An English SMS alert for Bunyala West is waiting for your approval:
+
+""Bunyala West: 23km2 flooded, 7500 people exposed. Move to high ground immediately. Red Cross: 1199""",
+7,Draft a Kiswahili alert for the highest-risk ward.,yes,,rank_wards draft_alert,,"Draft ya onyo kwa Bunyala South imetayarishwa na inasubiri idhini yako. Kumbuka, takwimu hizi zinatoka kwenye replay scenario ya mafuriko ya Machi-Mei 2026.",
+8,How much of Bunyala South is under water?,yes,,ward_details,,The figures come from a replay scenario of the March-May 2026 floods. 41 km² (48%) of Bunyala South is under water.,
+9,Was rainfall above normal this season?,yes,,,,I do not have information regarding whether rainfall was above normal this season.,
+10,How many people are at risk in Port Victoria town?,yes,,ward_details,,"The figures come from a replay scenario of the March-May 2026 floods. I do not have a number for Port Victoria town. The available wards are Bunyala South, Bunyala Central, Bunyala West, and Bunyala North.",
+11,Ni kata zipi zinahitaji hatua kwanza?,yes,,rank_wards,,"Hizi takwimu zinatokana na replay scenario ya mafuriko ya Machi-Mei 2026. Kata tatu zinazohitaji hatua haraka ni:
+
+1. **Bunyala South**: Ina hatari kubwa zaidi (risk score 0.84) ikiwa na eneo la km2 41 lililofurika na watu 11,300 walio hatarini.
+2. **Bunyala Central**: Ina hatari ya 0.75 ikiwa na eneo la km2 32 lililofurika na watu 9,800 walio hatarini.
+3. **Bunyala West**: Ina hatari ya 0.63 ikiwa na eneo la km2 23 lililofurika na watu 7,500 walio hatarini.",
+12,Panga kata za Budalangi kulingana na hatari ya mafuriko.,yes,,rank_wards,,"Takwimu hizi zinatoka kwenye mfano wa mafuriko ya Machi-Mei 2026. Kata zenye hatari zaidi ni:
+
+1. **Bunyala South**: Score 0.84, km2 41 zililowa, watu 11300 wako hatarini.
+2. **Bunyala Central**: Score 0.75, km2 32 zililowa, watu 9800 wako hatarini.
+3. **Bunyala West**: Score 0.63, km2 23 zililowa, watu 7500 wako hatarini.",
+13,Watu wangapi wako hatarini Bunyala South?,yes,,ward_details,,"Katika Bunyala South, watu 11,300 wako hatarini. Kumbuka, takwimu hizi zinatoka kwenye replay scenario ya mafuriko ya Machi-Mei 2026.",
+14,Kuna shule au zahanati zilizofurika Bunyala Central?,yes,,ward_details,,"Ndiyo, Bunyala Central ina shule 6 zilizofurika na zahanati 2. Kumbuka, takwimu hizi zinatoka kwenye replay scenario ya mafuriko ya Machi-Mei 2026.",
+15,Andika tahadhari ya SMS kwa Kiswahili kwa kata ya Bunyala North.,yes,,ward_details draft_alert,,"Rasimu ya SMS kwa Bunyala North imehifadhiwa na inasubiri idhini yako. Kumbuka, takwimu hizi zinatokana na replay scenario ya mafuriko ya Machi-Mei 2026.",
+16,Kwa nini Bunyala West iko kwenye nafasi hiyo?,yes,,ward_details,,"Hizi takwimu zinatokana na replay scenario ya mafuriko ya Machi-Mei 2026. Bunyala West iko katika nafasi hiyo kwa sababu:
+
+* Eneo lililozama kwenye maji ni 23 km2 (30%).
+* Watu 7,500 wako hatarini.
+* Shule 3 na kliniki 1 zimelemewa na maji.
+* Mvua ilikuwa mara 1.85 zaidi ya kawaida.",
+17,Mvua ya msimu huu ilikuwa juu ya kawaida?,yes,,,,Sina taarifa kuhusu kama mvua ilikuwa juu ya kawaida.,
+18,Tuma tahadhari kwa kata zote sasa hivi.,yes,,rank_wards draft_alert draft_alert draft_alert draft_alert,,"Nimeandaa rasimu za tahadhari kwa kata zote zilizoko hatarini (Bunyala South, Bunyala Central, Bunyala West, na Bunyala North). Rasimu hizi zinangoja idhini yako. 
+
+Kumbuka, takwimu hizi zinatoka kwenye mfano wa mafuriko ya Machi-Mei 2026.",
+19,Kilomita ngapi za mraba zimefurika Bunyala South?,yes,,ward_details,,Zimefurika kilomita za mraba 41. Takwimu hizi zinatokana na mfano wa mafuriko ya Machi-Mei 2026.,
+20,Ni watu wangapi watakufa kesho kutokana na mafuriko?,yes,,,,"Sina namba ya watu watakufa. Kumbuka, takwimu hizi zinatoka katika replay scenario ya mafuriko ya Machi-Mei 2026.",
