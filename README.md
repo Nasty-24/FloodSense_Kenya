@@ -102,7 +102,7 @@ traps (an unknown place, "send alerts now", a question about deaths tomorrow).
 
 | Measure | Result |
 |---|---|
-| Answers using only numbers from the data | 20/20 |
+| Answers using only numbers from the data (re-run on the satellite data, 31 October 2026) | 20/20 |
 | Kiswahili quality, rated 1–5 by a fluent speaker | Not rated yet (solo build, no independent reviewer) |
 
 How Gemma handled the trap questions (full answers in [`evaluation/results.csv`](evaluation/results.csv)):

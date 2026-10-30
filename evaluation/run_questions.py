@@ -14,7 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from floodsense import alerts  # noqa: E402
 from floodsense.agent import ask_gemma  # noqa: E402
 from floodsense.alerts import numbers_in  # noqa: E402
-from floodsense.wards import load_wards  # noqa: E402
+from floodsense.wards import SOURCE, load_wards  # noqa: E402
 
 HERE = Path(__file__).parent
 
@@ -23,6 +23,7 @@ def known_numbers() -> set[float]:
     known = {1, 2, 3, 4, 160, 1199, 2020, 2023, 2026}  # ranks, SMS limit, helpline, data years
     for value in load_wards().select_dtypes("number").to_numpy().ravel():
         known |= {float(value), float(round(value)), round(float(value), 1)}
+    known |= set(numbers_in(SOURCE))  # dates and years Gemma quotes when citing the source
     return known
 
 

@@ -24,7 +24,12 @@ left, right = st.columns([3, 2], gap="large")
 
 with left:
     st.subheader("Wards ranked by flood risk")
-    st.map(wards.assign(size=wards["people_exposed"] / 8), latitude="lat", longitude="lon", size="size", zoom=10)
+    # Dot size = people on flooded land; colour = risk (red high, amber medium, yellow low)
+    dots = wards.assign(
+        size=600 + 1400 * wards["people_exposed"] / max(wards["people_exposed"].max(), 1),
+        colour=wards["risk_score"].map(lambda r: "#d62828cc" if r >= 0.5 else "#f77f00cc" if r >= 0.3 else "#fcbf49cc"),
+    )
+    st.map(dots, latitude="lat", longitude="lon", size="size", color="colour", zoom=10)
     table = wards[["ward", "risk_score", "flooded_pct", "people_exposed", "schools_flooded", "clinics_flooded"]]
     st.dataframe(table, hide_index=True, use_container_width=True, column_config={
         "risk_score": st.column_config.ProgressColumn("risk", min_value=0, max_value=1, format="%.2f"),
