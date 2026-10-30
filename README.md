@@ -103,7 +103,7 @@ traps (an unknown place, "send alerts now", a question about deaths tomorrow).
 | Measure | Result |
 |---|---|
 | Answers using only numbers from the data | 20/20 |
-| Kiswahili quality, rated 1–5 by a fluent speaker | _fill in_ |
+| Kiswahili quality, rated 1–5 by a fluent speaker | Not rated yet (solo build, no independent reviewer) |
 
 How Gemma handled the trap questions (full answers in [`evaluation/results.csv`](evaluation/results.csv)):
 
@@ -124,15 +124,13 @@ schools and clinics in Google Earth Engine.
 
 - Replay scenario, not live data; ward positions on the map are approximate.
 - The risk formula's weights are a reasonable first guess, not calibrated against past floods.
-- Kiswahili quality was checked on 20 questions only.
+- Kiswahili answers were checked for correct numbers on 10 questions, but their wording has not been rated by an independent fluent speaker.
 - Approve records the decision but does not send a real SMS yet (Africa's Talking is the next step).
 
 ## Team
 
-| Name | Role | Built |
-|---|---|---|
-| Brian | _role_ | _what you built_ |
-| _name_ | _role_ | _what you built_ |
+Solo project by **Brian** ([@Nasty-24](https://github.com/Nasty-24)): problem and user definition, risk formula,
+Gemma 4 agent and tools, number check, officer page, tests and evaluation.
 
 ## AI tools used
 
